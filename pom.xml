@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>dk.dbc</groupId>
+    <artifactId>serviceutils</artifactId>
+    <packaging>jar</packaging>
+    <version>0.1-SNAPSHOT</version>
+
+    <distributionManagement>
+        <repository>
+            <id>mavenrepo.dbc.dk</id>
+            <name>mavenrepo</name>
+            <url>http://mavenrepo.dbc.dk/content/repositories/snapshots</url>
+        </repository>
+    </distributionManagement>
+
+    <properties>
+        <json-binding.version>0.1-SNAPSHOT</json-binding.version>
+        <javax.ws.rs.version>2.1</javax.ws.rs.version>
+    </properties>
+
+    <build>
+        <finalName>service-utils</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>dk.dbc</groupId>
+            <artifactId>json-binding</artifactId>
+            <version>${json-binding.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
+    </dependencies>
+</project>

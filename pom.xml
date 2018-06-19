@@ -16,6 +16,7 @@
     </distributionManagement>
 
     <properties>
+        <httpclient.version>0.1.0</httpclient.version>
         <json-binding.version>0.1-SNAPSHOT</json-binding.version>
         <javax.ws.rs.version>2.1</javax.ws.rs.version>
     </properties>
@@ -35,6 +36,11 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>dk.dbc</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
         <dependency>
             <groupId>dk.dbc</groupId>
             <artifactId>json-binding</artifactId>

@@ -40,10 +40,19 @@ public interface ServiceStatus {
      * upstreams health
      */
     default Response howru(List<String> upstreams) {
-        HowRU howRU = new HowRU()
-            .withStatus(200)
-            .withUpstreams(DependencyChecker.checkUpstreams(upstreams));
-        return Response.ok(howRU.toJson()).build();
+        try {
+            final Response response = ServiceStatus.this.getStatus();
+            final HowRU howRU = new HowRU()
+                .withStatus(response.getStatus())
+                .withUpstreams(DependencyChecker.checkUpstreams(upstreams));
+            return Response.ok(howRU.toJson()).build();
+        } catch (Exception e) {
+            HowRU.Error error = new HowRU.Error()
+                .fromThrowable(e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(new HowRU().withError(error).toJson())
+                .build();
+        }
     }
 
     /**

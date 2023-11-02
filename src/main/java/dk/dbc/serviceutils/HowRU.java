@@ -1,8 +1,8 @@
 package dk.dbc.serviceutils;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import dk.dbc.jsonb.JSONBContext;
-import dk.dbc.jsonb.JSONBException;
+import dk.dbc.commons.jsonb.JSONBContext;
+import dk.dbc.commons.jsonb.JSONBException;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

@@ -2,55 +2,37 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>dk.dbc</groupId>
+    <parent>
+        <groupId>dk.dbc</groupId>
+        <artifactId>microservice-pom</artifactId>
+        <version>java11-SNAPSHOT</version>
+        <relativePath/>
+    </parent>
+
     <artifactId>serviceutils</artifactId>
-    <packaging>jar</packaging>
-    <version>0.1-SNAPSHOT</version>
-
-    <distributionManagement>
-        <repository>
-            <id>mavenrepo.dbc.dk</id>
-            <name>mavenrepo</name>
-            <url>http://mavenrepo.dbc.dk/content/repositories/snapshots</url>
-        </repository>
-    </distributionManagement>
-
-    <properties>
-        <httpclient.version>0.1.0</httpclient.version>
-        <json-binding.version>0.1-SNAPSHOT</json-binding.version>
-        <javax.ws.rs.version>2.1</javax.ws.rs.version>
-    </properties>
+    <version>2.0-SNAPSHOT</version>
 
     <build>
         <finalName>service-utils</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
 
     <dependencies>
         <dependency>
             <groupId>dk.dbc</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
+            <artifactId>dbc-commons-httpclient</artifactId>
+            <version>2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>dk.dbc</groupId>
-            <artifactId>json-binding</artifactId>
-            <version>${json-binding.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
-            <scope>provided</scope>
+            <artifactId>dbc-commons-json-binding</artifactId>
+            <version>2.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>mavenrepo.dbc.dk</id>
+            <url>https://mavenrepo.dbc.dk/content/groups/public</url>
+        </repository>
+    </repositories>
 </project>

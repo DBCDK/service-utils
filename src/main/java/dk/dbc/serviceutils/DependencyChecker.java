@@ -11,38 +11,35 @@ import com.fasterxml.jackson.core.JsonToken;
 import dk.dbc.httpclient.FailSafeHttpClient;
 import dk.dbc.httpclient.HttpClient;
 import dk.dbc.httpclient.HttpGet;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.Response;
 import net.jodah.failsafe.RetryPolicy;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Set;
 
 public class DependencyChecker {
-    private static RetryPolicy RETRY_POLICY = new RetryPolicy()
-        .retryOn(Collections.singletonList(ProcessingException.class))
-        .retryIf((Response response) -> response.getStatus() == 500
-            || response.getStatus() == 502)
-        .withDelay(3, TimeUnit.SECONDS)
-        .withMaxRetries(3);
+    private static final Set<Integer> RETRY_CODES = Set.of(500, 502);
+    private static final RetryPolicy<Response> RETRY_POLICY = new RetryPolicy<Response>()
+            .handle(ProcessingException.class)
+            .handleResultIf(r -> RETRY_CODES.contains(r.getStatus()))
+            .withDelay(Duration.ofSeconds(3))
+            .withMaxRetries(3);
 
     public static List<HowRU.Upstream> checkUpstreams(List<String> urls) {
         final List<HowRU.Upstream> upstreams = new ArrayList<>();
         final Client client = HttpClient.newClient();
         try {
-            final FailSafeHttpClient failSafeHttpClient = FailSafeHttpClient
-                .create(client, RETRY_POLICY);
+            final FailSafeHttpClient failSafeHttpClient = FailSafeHttpClient.create(client, RETRY_POLICY);
             for (String url : urls) {
-                final Response response = new HttpGet(failSafeHttpClient)
-                    .withBaseUrl(url)
-                    .execute();
-                HowRU.Upstream upstream = new HowRU.Upstream()
-                    .withEndpoint(url).withStatus(response.getStatus());
-                upstreams.add(upstream);
+                try(Response response = new HttpGet(failSafeHttpClient).withBaseUrl(url).execute()) {
+                    HowRU.Upstream upstream = new HowRU.Upstream().withEndpoint(url).withStatus(response.getStatus());
+                    upstreams.add(upstream);
+                }
             }
             return upstreams;
         } finally {
@@ -59,12 +56,12 @@ public class DependencyChecker {
          */
         final JsonFactory jsonFactory = new JsonFactory();
         final JsonParser parser = jsonFactory.createParser(
-            upstreamsJsonList);
+                upstreamsJsonList);
         final List<String> upstreamUrls = new ArrayList<>();
-        while(!parser.isClosed()) {
+        while (!parser.isClosed()) {
             final JsonToken token = parser.nextToken();
-            if(JsonToken.START_ARRAY.equals(token)) {
-                while(!JsonToken.END_ARRAY.equals(parser.nextToken())) {
+            if (JsonToken.START_ARRAY.equals(token)) {
+                while (!JsonToken.END_ARRAY.equals(parser.nextToken())) {
                     upstreamUrls.add(parser.getText());
                 }
             }
